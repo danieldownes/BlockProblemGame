@@ -1,0 +1,40 @@
+--------------------------------------------------------------------------
+
+Block Game v1.01.00  (c)2005        :        Ex-D Software Development(TM)
+
+--------------------------------------------------------------------------
+
+03-02-2005
+	    * Working on solver; checking for win
+
+18-09-2001:
+	    * Implmented piece graphics
+
+17-09-2001:
+	    + Piece Graphics
+	    + User interaction (moveing and turning)
+
+16-09-2001:
+	    * Other major developments - no user interaction, etc yet
+            - Old Code from 'frmMain'
+            + 'cusGuiPiece'
+            + 'modPublics'
+
+15-09-2001:
+            + This file
+ v1.01.00   * Major modifications to arcitecture - now in a class format
+
+
+
+15-04-2001:
+	    + Main attempt in non-Class format - just to solve proplem, no game - unsucesful
+
+---------------------------------------------------------------------------
+             |                            |          |
+             |format:                     |          | Key:
+             |----------------------------|          |  + = added
+             |dd-mm-yyyy:                 |          |  - = removed
+             |            + 3rd Task done |          |  * = changed/updated
+             |            * 2ed Task done |          \ __ __ __ __ __ __ __
+	     |            - 1st Task done |
+	     \ __ __ __ __ __ __ __ __ __ /
