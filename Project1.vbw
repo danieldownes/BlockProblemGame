@@ -1,7 +1,0 @@
-frmMain = 189, 279, 1122, 1029, Z, 281, 227, 946, 843, C
-clsBoard = 132, 132, 590, 577, CI
-clsPiece = 0, 0, 934, 460, C
-modPublics = 61, 89, 709, 724, C
-cusGuiPiece = 264, 264, 912, 899, C, 480, 249, 600, 354, C
-conGenPicToggle = 0, 0, 0, 0, C, 0, 0, 0, 0, C
-conGenPicButton = 176, 176, 825, 811, C, 220, 220, 869, 855, C

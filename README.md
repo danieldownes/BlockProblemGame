@@ -22,4 +22,4 @@ I implemented the blocks including data to hold the 4 colours and set the diamon
 
 The UI allows the user to swap two blocks with two clicks. And also rotate a block with a right-click.
 
-![image](https://user-images.githubusercontent.com/1720388/161404512-a0371604-c718-492d-84f1-433117ad880d.png)
+<img src="https://user-images.githubusercontent.com/1720388/161404512-a0371604-c718-492d-84f1-433117ad880d.png" width="40%">
