@@ -9,7 +9,13 @@ public class BlockGame
         blocks = new List<Block>();
         populateFromGridData();
 
-		Console.WriteLine(blocks[2].B);
+        var graph = new AdjacencyGraph();
+        graph.Init();
+
+        graph.AddBlock(NodeType.BlockCentreDiamond);
+        graph.AddBlock(NodeType.BlockCentreDiamond);
+        graph.AddBlock(NodeType.BlockCentreArrow);
+        graph.AddBlock(NodeType.BlockCentreArrow);
     }
 
     private void populateFromGridData()
