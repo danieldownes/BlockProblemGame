@@ -1,4 +1,3 @@
-using Godot;
 using System;
 
 ///<summery>
@@ -14,14 +13,13 @@ public class Block
 	public int R;
 	public bool M;
 	
-	public void SetData(int top, int bottom, int left, int right, bool middle)
+	public Block(int top, int right, int bottom, int left, bool middle)
 	{
-		Block b = new Block();
-		b.T = top;
-		b.B = bottom;
-		b.L = left;
-		b.R = right;
-		b.M = middle;
+		T = top;
+		B = bottom;
+		L = left;
+		R = right;
+		M = middle;
 	}
 	
 	public void TurnClockwise()

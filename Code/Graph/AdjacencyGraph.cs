@@ -1,60 +1,101 @@
-using Godot;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
-public class Grid
+// Attempt at some form of adjacency graph
+public class AdjacencyGraph
 {
-	public Block[,] Map;
-
-	public void Init(int width, int height)
-	{
-		//Map = new Map int[width, height];
-	}
+	// The board node is the graph root
+	// A block contains 4 edge nodes types, types: coloured indexes (0 ... 3)
+	// 1 centre node type, index (0, 1)
+	// 4 adjacency nodes, top, bottom, left, right
 	
+	// Constraints:	
+	// A board node should only contain 16 blocks 
+	// a block centre node can not match the adjacent block, centre node type
+	// adjacency nodes, can be a block reference, or empty
+	// there can only be 16 empty adjacency nodes
+	// all others should reference a block note 
+	
+	public void Init()
+	{
+		Graph game = new Graph();
+		
+		game.AddNode(NodeType.Board);
+		
+		game.AddNodes(NodeType.Block, 16);
+		game.AddEdge(NodeType.Board, NodeType.Block);
+		
+		// A block contains 4 side nodes
+		game.AddNode(NodeType.NorthSide);
+		game.AddNode(NodeType.SouthSide);
+		game.AddNode(NodeType.EastSide);
+		game.AddNode(NodeType.WestSide);
+		game.AddEdge(NodeType.Block, NodeType.NorthSide);
+		game.AddEdge(NodeType.Block, NodeType.SouthSide);
+		game.AddEdge(NodeType.Block, NodeType.EastSide);
+		game.AddEdge(NodeType.Block, NodeType.WestSide);
+
+		// A block can contain a centre diamond or centre arrow shape 
+		game.AddNode(NodeType.BlockCentreDiamond);
+		game.AddNode(NodeType.BlockCentreArrow);
+
+		
+	}
+}
+
+public enum NodeType
+{
+	Board,
+
+	Block,
+
+	NorthSide,
+	SouthSide,
+	EastSide,
+	WestSide,
+
+	Red,
+	Yellow,
+	Blue,
+	Green,
+
+	BlockCentreDiamond,
+	BlockCentreArrow,
+
+	UpAdjacentBlock,
+	BottomAdjacentBlock,
+	LeftAdjacentBlock,
+	RightAdjacentBlock
 }
 
 
-
-/*
-Private Sub Form_Load()
-	'Load pieces...
-
+public class Node
+{
+	public string Name;
+	public NodeType Type;
 	
-	Dim intNum    As Integer
-	Dim intTotal  As Integer
-	Dim intN      As Integer
-	Dim cusTemp   As cusPieceDataT
-	Dim intTemp   As Integer
+	public Node(NodeType type)
+	{
+		Name = Enum.GetName(typeof(NodeType), type);
+		Type = type;
+	}
+}	
+
+public class Constraint
+{
 	
-	intTotal = 0
-	
-	'Get block data...
-	Open App.Path & "/data.dat" For Input As #1
+}	
 
-	Do
 
-		Input #1, intNum, cusTemp.intPieceDat(0), cusTemp.intPieceDat(1), cusTemp.intPieceDat(2), cusTemp.intPieceDat(3), intTemp
-		
-		cusTemp.blnType = intTemp
-		
-		For intN = 1 To intNum
-			setPieceDatType Piece(intTotal), cusTemp
-			
-			'Overall number of pieces
-			intTotal = intTotal + 1
-		Next intN
+public class Edge
+{
+	public Node L;
+	public Node R;
 
-MsgBox Str(intTotal)
-
-	Loop Until EOF(1)
-	Close #1
-	
-'    'Set all piece numbers
-'    Board.ReSetPlaces
-	
-	intCurPiece = -1
-	
-	UpDateGUI
-
-End Sub
-
-*/
+	public Edge(Node l, Node r)
+	{
+		L = l;
+		R = r;
+	}
+}

@@ -1,28 +1,3 @@
-Attribute VB_Name = "modPublics"
-Option Explicit
-
-
-Enum enuColour
-    R = 0
-    G
-    B
-    Y
-End Enum
-
-Enum enuLocation
-    eTop = 0
-    eBottom
-    eLeft
-    eRight
-End Enum
-
-
-
-Type cusPieceDataT
-    blnType        As Boolean    ' Dimond(True) or Arrows(Flase)?
-    intPieceDat(3) As enuColour  ' Use 'enuLocation' to return/set the 'enuColour' of that location
-End Type
-
 
 Sub setPieceDatType(objTo As Object, cusData As cusPieceDataT)
     Dim intTop As Integer, intBottom As Integer, intLeft As Integer, intRight As Integer
