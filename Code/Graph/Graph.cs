@@ -1,3 +1,7 @@
+using System.Collections.Generic;
+using System.Linq;
+using NUnit.Framework;
+
 public class Graph
 {
     public List<Node> Nodes;
@@ -9,8 +13,26 @@ public class Graph
         Edges = new List<Edge>();
     }
 
+    public Node AddNode(NodeType type)
+    {
+        var n = new Node(type);
+        Nodes.Add(n);
+        return n;
+    }
+
+    public void AddNodes(NodeType type, int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            Nodes.Add(new Node(type));
+        }
+    }
+
     public void AddEdge(Node left, Node right)
     {
+        if( left == right)
+            return;
+        
         if (BiDirectionalEdgeExists(left, right) == true)
             return;
 
@@ -38,19 +60,6 @@ public class Graph
             }
         }
     }
-
-    public Node AddNode(NodeType type)
-    {
-        var n = new Node(type);
-        Nodes.Add(n);
-        return n;
-    }
-
-    public void AddNodes(NodeType type, int count)
-    {
-        for (int i = 0; i < count; i++)
-        {
-            Nodes.Add(new Node(type));
-        }
-    }
 }
+
+
