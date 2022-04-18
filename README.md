@@ -1,6 +1,6 @@
 # Block Problem
 
-<img src="./docs/photo.png">
+<img src="./doc/photo.jpg">
 
 I was gifted a wooden puzzle game that contains an grid array of 4x4 blocks.
 
@@ -10,8 +10,6 @@ Based on a 4x4 grid of wooden blocks, each block has a graphic on its top-side.
 Each graphic indicates a colour for each edge of the square.
 Half the blocks also contain a diamond in the centre. The other half do not.
 
-<img src="./docs/vb6.png" width="40%">
-
 
 ## Visual Basic Implementation
 
@@ -19,7 +17,7 @@ As per the [History.txt](./docs/History.txt) file, in 2001, I implemented the bl
 
 The UI allows the user to swap two blocks with two clicks. And also rotate a block with a right-click.
 
-<img src="https://user-images.githubusercontent.com/1720388/161404512-a0371604-c718-492d-84f1-433117ad880d.png" width="40%">
+<img src="./doc/vb6.png" width="40%">
 
 The intention was to also iniclude a brute force solving algorithm, however this was never started.
 
