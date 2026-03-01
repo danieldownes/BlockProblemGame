@@ -26,10 +26,10 @@ public class AdjacencyGraph
 	// A block can be rotated, so adjacent nodes, and colours rotate together
 	// A block can be swapped with any other block
 
-	// Permutataion generating
+	// Permutation generating
 	// ..using each constraint individually, generate a set of permutations 
 	
-	// Permutataion elliminination, known small groupings, 
+	// Permutation elliminination, known small groupings, 
 	///  are outcast? eg, a set of 4 blocks can not possibly fit
 
 	// Matching (Marching the graph)

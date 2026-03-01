@@ -21,7 +21,7 @@ public class BlockGame
 
     private void populateFromGridData()
     {
-        var data = GridData.Data;
+        var data = BlockTypes.Data;
 
         for (int i = 0; i < data.GetLength(0); i++)
         {

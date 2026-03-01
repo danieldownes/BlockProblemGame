@@ -1,10 +1,10 @@
 using System;
 
-///<summery>
+///<summary>
 /// DTO to define a block. This is a piece on the board grid.
 /// The Top, Bottom, Left and Right edges have colour indicators.
-/// The Middle contains a blank or Dimond, denoted false / true respectively.
-///</summery>
+/// The Middle contains a blank or Diamond, denoted false / true respectively.
+///</summary>
 public class Block
 {
 	public int T;
