@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Block Puzzle Game</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: sans-serif; background: #1a1a2e; color: #eee; min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center; padding: 1rem; user-select: none; }
+h1 { margin-bottom: 0.2rem; }
+.subtitle { color: #888; margin-bottom: 1rem; font-size: 14px; }
+
+.legend { display: flex; gap: 16px; justify-content: center; margin-bottom: 1.2rem; flex-wrap: wrap; }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 12px; }
+.legend-swatch { width: 14px; height: 14px; border-radius: 3px; border: 1px solid #555; }
+
+.layout { display: flex; gap: 2rem; align-items: flex-start; flex-wrap: wrap; justify-content: center; }
+
+/* Board */
+.board-area { display: flex; flex-direction: column; align-items: center; }
+.board-label { font-size: 13px; color: #aaa; margin-bottom: 8px; }
+.board { display: grid; grid-template-columns: repeat(4, 110px); grid-template-rows: repeat(4, 110px);
+  gap: 3px; background: #0e0e1a; padding: 6px; border-radius: 8px; border: 2px solid #333; }
+.board-cell { width: 110px; height: 110px; background: #16162a; border-radius: 4px;
+  border: 2px dashed #2a2a44; display: flex; align-items: center; justify-content: center;
+  position: relative; transition: border-color 0.15s, background 0.15s; }
+.board-cell.drag-over { border-color: #5dade2; background: #1a2a44; }
+.board-cell.error-edge { border-color: #e74c3c; background: #2a1a1a; }
+.board-cell.hint-target { border-color: #2ecc71; background: #1a2e1a;
+  animation: hintPulse 0.8s ease-in-out infinite alternate; }
+
+/* Tray */
+.tray-area { display: flex; flex-direction: column; align-items: center; }
+.tray-label { font-size: 13px; color: #aaa; margin-bottom: 8px; }
+.tray { display: grid; grid-template-columns: repeat(4, 110px); grid-template-rows: repeat(4, 110px);
+  gap: 3px; background: #0e0e1a; padding: 6px; border-radius: 8px; border: 2px solid #2a2a3a; }
+.tray-cell { width: 110px; height: 110px; background: #16162a; border-radius: 4px;
+  display: flex; align-items: center; justify-content: center; position: relative; }
+
+/* Block piece wrapper */
+.piece { position: relative; cursor: grab; width: 100px; height: 100px; }
+.piece.dragging { opacity: 0.3; cursor: grabbing; }
+.piece svg { display: block; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
+.piece.hint-piece svg { filter: drop-shadow(0 0 8px rgba(46,204,113,0.8)); }
+.piece.hint-piece { animation: hintPulse 0.8s ease-in-out infinite alternate; }
+
+@keyframes hintPulse {
+  from { opacity: 0.7; }
+  to   { opacity: 1; }
+}
+
+/* Rotate buttons - shown on hover */
+.rotate-btns { position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; opacity: 0; transition: opacity 0.15s; z-index: 10; }
+.piece:hover .rotate-btns { opacity: 1; }
+.piece.dragging .rotate-btns { opacity: 0 !important; }
+.rotate-btn { position: absolute; width: 24px; height: 24px; border-radius: 50%;
+  background: rgba(0,0,0,0.75); border: 1px solid #666; color: #fff; font-size: 14px;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+  pointer-events: auto; transition: background 0.12s, transform 0.12s; line-height: 1; }
+.rotate-btn:hover { background: rgba(80,80,180,0.85); transform: scale(1.15); }
+.rotate-btn.left { bottom: 2px; left: 2px; }
+.rotate-btn.right { bottom: 2px; right: 2px; }
+
+/* Drag ghost */
+.drag-ghost { position: fixed; pointer-events: none; z-index: 1000; opacity: 0.9;
+  transform: translate(-50%, -50%); }
+
+/* Status bar */
+.status-bar { margin-top: 1rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; justify-content: center; }
+.status-bar button { padding: 6px 16px; border: 1px solid #555; border-radius: 4px;
+  background: #2c2c44; color: #eee; cursor: pointer; font-size: 13px; transition: background 0.15s; }
+.status-bar button:hover { background: #3c3c64; }
+.status-msg { font-size: 14px; min-width: 200px; text-align: center; }
+.status-msg.win { color: #2ecc71; font-weight: bold; font-size: 16px; }
+.status-msg.partial { color: #f1c40f; }
+.status-msg.hint { color: #2ecc71; }
+
+/* Level tabs */
+.level-tabs { display: flex; gap: 8px; margin-bottom: 1rem; }
+.level-tab { padding: 6px 18px; border: 1px solid #555; border-radius: 4px;
+  background: #2c2c44; color: #aaa; cursor: pointer; font-size: 13px; transition: all 0.15s; }
+.level-tab.active { background: #3c3c64; color: #fff; border-color: #5dade2; }
+.level-tab:hover { background: #3c3c64; }
+
+/* Volume control */
+.vol-wrap { display: flex; align-items: center; gap: 6px; }
+.vol-wrap label { font-size: 12px; color: #888; }
+.vol-wrap input[type=range] { width: 60px; accent-color: #5dade2; }
+</style>
+</head>
+<body>
+
+<h1>Block Puzzle</h1>
+<p class="subtitle">Drag blocks onto the board &mdash; adjacent edges must match colours</p>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-swatch" style="background:#e74c3c"></div> Red</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#2ecc71"></div> Green</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#3498db"></div> Blue</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#f1c40f"></div> Yellow</div>
+  <div class="legend-item"><svg width="14" height="14"><polygon points="7,1 13,7 7,13 1,7" fill="#fff" opacity="0.7"/></svg> Diamond</div>
+</div>
+
+<div class="level-tabs">
+  <div class="level-tab active" data-level="1">Level 1 &mdash; Matching Edges</div>
+  <div class="level-tab" data-level="2">Level 2 &mdash; No Adjacent Diamonds</div>
+</div>
+
+<div class="layout">
+  <div class="board-area">
+    <div class="board-label">Board</div>
+    <div class="board" id="board"></div>
+  </div>
+  <div class="tray-area">
+    <div class="tray-label">Pieces</div>
+    <div class="tray" id="tray"></div>
+  </div>
+</div>
+
+<div class="status-bar">
+  <button id="btnReset">Reset</button>
+  <button id="btnHint">Hint</button>
+  <div class="vol-wrap">
+    <label>Vol</label>
+    <input type="range" id="volSlider" min="0" max="100" value="50">
+  </div>
+  <div class="status-msg" id="statusMsg">Place all 16 blocks on the board</div>
+</div>
+
+<script>
+// ── Data ──────────────────────────────────────────────
+const COLORS = ['#e74c3c','#2ecc71','#3498db','#f1c40f'];
+const CNAMES = ['R','G','B','Y'];
+// BlockTypes: [count, T, B, L, R, diamond]
+const TYPES = [
+  [3, 1, 3, 2, 0, 1],
+  [3, 2, 1, 3, 0, 1],
+  [1, 2, 3, 1, 0, 1],
+  [1, 3, 3, 1, 0, 1],
+  [1, 1, 3, 2, 0, 0],
+  [2, 1, 2, 3, 0, 0],
+  [5, 2, 1, 3, 0, 0]
+];
+
+function makeBlocks() {
+  const blocks = [];
+  let id = 0;
+  TYPES.forEach(t => {
+    const [count, top, bottom, left, right, diamond] = t;
+    for (let i = 0; i < count; i++)
+      blocks.push({ id: id++, top, right, bottom, left, diamond, rotation: 0 });
+  });
+  return blocks;
+}
+
+// ── State ─────────────────────────────────────────────
+let pieces = makeBlocks();
+let board = Array.from({length: 16}, () => null);
+let tray  = pieces.map(p => p.id);
+let currentLevel = 1;
+let hintState = null; // { boardIdx, trayIdx, pieceId, rotations }
+
+// ── Audio ─────────────────────────────────────────────
+let audioCtx = null;
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+function getVolume() {
+  return parseInt(document.getElementById('volSlider').value) / 100;
+}
+
+function playTone(freq, duration, type, vol, ramp) {
+  const ctx = getAudioCtx();
+  const v = vol * getVolume();
+  if (v <= 0) return;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, ctx.currentTime);
+  if (ramp) osc.frequency.linearRampToValueAtTime(ramp, ctx.currentTime + duration);
+  gain.gain.setValueAtTime(v, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(ctx.currentTime);
+  osc.stop(ctx.currentTime + duration);
+}
+
+function playNoise(duration, vol) {
+  const ctx = getAudioCtx();
+  const v = vol * getVolume();
+  if (v <= 0) return;
+  const bufSize = ctx.sampleRate * duration;
+  const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+  const data = buf.getChannelData(0);
+  for (let i = 0; i < bufSize; i++) data[i] = (Math.random() * 2 - 1);
+  const src = ctx.createBufferSource();
+  src.buffer = buf;
+  const gain = ctx.createGain();
+  gain.gain.setValueAtTime(v, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+  // bandpass for a thud feel
+  const filter = ctx.createBiquadFilter();
+  filter.type = 'bandpass';
+  filter.frequency.value = 200;
+  filter.Q.value = 1;
+  src.connect(filter);
+  filter.connect(gain);
+  gain.connect(ctx.destination);
+  src.start();
+  src.stop(ctx.currentTime + duration);
+}
+
+const sfx = {
+  pickup() {
+    playTone(600, 0.08, 'sine', 0.15);
+    playTone(900, 0.06, 'sine', 0.08);
+  },
+  drop() {
+    playNoise(0.08, 0.12);
+    playTone(220, 0.12, 'sine', 0.18);
+  },
+  rotate() {
+    playTone(1200, 0.05, 'square', 0.06);
+    playTone(1600, 0.04, 'square', 0.04);
+  },
+  error() {
+    playTone(180, 0.2, 'sawtooth', 0.12);
+    playTone(140, 0.25, 'sawtooth', 0.1);
+  },
+  hint() {
+    const ctx = getAudioCtx();
+    const t = ctx.currentTime;
+    playTone(523, 0.12, 'sine', 0.12);
+    setTimeout(() => playTone(659, 0.12, 'sine', 0.12), 100);
+    setTimeout(() => playTone(784, 0.15, 'sine', 0.10), 200);
+  },
+  win() {
+    const notes = [523, 659, 784, 1047];
+    notes.forEach((f, i) => {
+      setTimeout(() => playTone(f, 0.25, 'sine', 0.18), i * 150);
+    });
+    setTimeout(() => {
+      playTone(1047, 0.5, 'sine', 0.15);
+      playTone(784, 0.5, 'triangle', 0.10);
+    }, 650);
+  },
+  noHint() {
+    playTone(400, 0.12, 'triangle', 0.10, 300);
+  }
+};
+
+// ── SVG rendering ─────────────────────────────────────
+function renderBlockSVG(b, size) {
+  const S = size, M = Math.round(S * 0.083), cx = S/2, cy = S/2;
+  const fs = Math.max(8, Math.round(S * 0.09));
+  let s = `<svg width="${S}" height="${S}" viewBox="0 0 ${S} ${S}">`;
+  s += `<rect x="${M}" y="${M}" width="${S-2*M}" height="${S-2*M}" fill="#2c2c44" rx="4"/>`;
+  const wedges = [
+    [b.top,    `${M},${M} ${S-M},${M} ${cx},${cy}`],
+    [b.right,  `${S-M},${M} ${S-M},${S-M} ${cx},${cy}`],
+    [b.bottom, `${S-M},${S-M} ${M},${S-M} ${cx},${cy}`],
+    [b.left,   `${M},${S-M} ${M},${M} ${cx},${cy}`],
+  ];
+  wedges.forEach(([c, pts]) => { s += `<polygon points="${pts}" fill="${COLORS[c]}" opacity="0.85"/>`; });
+  [[M,M],[S-M,M],[S-M,S-M],[M,S-M]].forEach(([x,y]) => {
+    s += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#1a1a2e" stroke-width="1.5"/>`;
+  });
+  s += `<rect x="${M}" y="${M}" width="${S-2*M}" height="${S-2*M}" fill="none" stroke="#555" stroke-width="1.5" rx="4"/>`;
+  if (b.diamond) {
+    const ds = Math.round(S * 0.13);
+    s += `<polygon points="${cx},${cy-ds} ${cx+ds},${cy} ${cx},${cy+ds} ${cx-ds},${cy}" fill="white" opacity="0.8" stroke="#aaa" stroke-width="0.5"/>`;
+  }
+  const ls = `font-size="${fs}" fill="#fff" text-anchor="middle" font-family="sans-serif" font-weight="bold"`;
+  s += `<text x="${cx}" y="${M+Math.round(fs*1.2)}" ${ls}>${CNAMES[b.top]}</text>`;
+  s += `<text x="${S-M-Math.round(fs*0.7)}" y="${cy+Math.round(fs*0.35)}" ${ls}>${CNAMES[b.right]}</text>`;
+  s += `<text x="${cx}" y="${S-M-Math.round(fs*0.45)}" ${ls}>${CNAMES[b.bottom]}</text>`;
+  s += `<text x="${M+Math.round(fs*0.7)}" y="${cy+Math.round(fs*0.35)}" ${ls}>${CNAMES[b.left]}</text>`;
+  s += '</svg>';
+  return s;
+}
+
+// ── Rotation ──────────────────────────────────────────
+function rotateBlock(piece, dir) {
+  if (dir === 1) {
+    const t = piece.top;
+    piece.top = piece.left; piece.left = piece.bottom;
+    piece.bottom = piece.right; piece.right = t;
+  } else {
+    const t = piece.top;
+    piece.top = piece.right; piece.right = piece.bottom;
+    piece.bottom = piece.left; piece.left = t;
+  }
+  piece.rotation = (piece.rotation + (dir === 1 ? 1 : 3)) % 4;
+}
+
+// ── DOM refs ──────────────────────────────────────────
+const boardEl = document.getElementById('board');
+const trayEl  = document.getElementById('tray');
+const statusMsg = document.getElementById('statusMsg');
+
+// ── Build cells ───────────────────────────────────────
+function buildCells() {
+  boardEl.innerHTML = '';
+  trayEl.innerHTML = '';
+  for (let i = 0; i < 16; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'board-cell';
+    cell.dataset.idx = i;
+    cell.dataset.zone = 'board';
+    boardEl.appendChild(cell);
+  }
+  for (let i = 0; i < 16; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'tray-cell';
+    cell.dataset.idx = i;
+    cell.dataset.zone = 'tray';
+    trayEl.appendChild(cell);
+  }
+}
+
+function getPiece(id) { return pieces.find(p => p.id === id); }
+
+function createPieceEl(piece) {
+  const el = document.createElement('div');
+  el.className = 'piece';
+  el.dataset.pieceId = piece.id;
+  // Check if this piece is the hint piece
+  if (hintState && hintState.pieceId === piece.id) el.classList.add('hint-piece');
+  el.innerHTML = renderBlockSVG(piece, 100) +
+    `<div class="rotate-btns">` +
+    `<div class="rotate-btn left" data-dir="-1" title="Rotate left">&#8634;</div>` +
+    `<div class="rotate-btn right" data-dir="1" title="Rotate right">&#8635;</div>` +
+    `</div>`;
+  return el;
+}
+
+// ── Render ────────────────────────────────────────────
+function render() {
+  document.querySelectorAll('.board-cell, .tray-cell').forEach(cell => {
+    cell.innerHTML = '';
+    cell.classList.remove('error-edge', 'hint-target');
+  });
+
+  board.forEach((pieceId, idx) => {
+    if (pieceId === null) return;
+    boardEl.children[idx].appendChild(createPieceEl(getPiece(pieceId)));
+  });
+
+  tray.forEach((pieceId, idx) => {
+    if (pieceId === null) return;
+    trayEl.children[idx].appendChild(createPieceEl(getPiece(pieceId)));
+  });
+
+  highlightErrors();
+
+  // Apply hint highlights
+  if (hintState) {
+    boardEl.children[hintState.boardIdx].classList.add('hint-target');
+  }
+
+  updateStatus();
+  attachPieceListeners();
+}
+
+// ── Validation / error highlights ─────────────────────
+function getEdgeErrors() {
+  const errors = new Set();
+  for (let r = 0; r < 4; r++) {
+    for (let c = 0; c < 4; c++) {
+      const idx = r * 4 + c;
+      const pid = board[idx];
+      if (pid === null) continue;
+      const p = getPiece(pid);
+      if (c < 3) {
+        const nid = board[idx + 1];
+        if (nid !== null) {
+          const n = getPiece(nid);
+          if (p.right !== n.left) { errors.add(idx); errors.add(idx + 1); }
+        }
+      }
+      if (r < 3) {
+        const nid = board[idx + 4];
+        if (nid !== null) {
+          const n = getPiece(nid);
+          if (p.bottom !== n.top) { errors.add(idx); errors.add(idx + 4); }
+        }
+      }
+      if (currentLevel >= 2 && p.diamond) {
+        if (c < 3) {
+          const nid = board[idx + 1];
+          if (nid !== null && getPiece(nid).diamond) { errors.add(idx); errors.add(idx + 1); }
+        }
+        if (r < 3) {
+          const nid = board[idx + 4];
+          if (nid !== null && getPiece(nid).diamond) { errors.add(idx); errors.add(idx + 4); }
+        }
+      }
+    }
+  }
+  return errors;
+}
+
+function highlightErrors() {
+  const errors = getEdgeErrors();
+  errors.forEach(idx => boardEl.children[idx].classList.add('error-edge'));
+}
+
+let prevWin = false;
+function updateStatus() {
+  const placed = board.filter(p => p !== null).length;
+  const errors = getEdgeErrors();
+  const won = placed === 16 && errors.size === 0;
+  if (won) {
+    statusMsg.textContent = currentLevel === 1
+      ? 'Level 1 Complete! All edges match!'
+      : 'Level 2 Complete! All edges match, no adjacent diamonds!';
+    statusMsg.className = 'status-msg win';
+    if (!prevWin) { sfx.win(); prevWin = true; }
+  } else {
+    prevWin = false;
+    if (hintState) {
+      statusMsg.textContent = `Hint: place the highlighted piece at the green cell`;
+      statusMsg.className = 'status-msg hint';
+    } else if (placed === 0) {
+      statusMsg.textContent = 'Place all 16 blocks on the board';
+      statusMsg.className = 'status-msg';
+    } else if (errors.size > 0) {
+      statusMsg.textContent = currentLevel === 1
+        ? `${placed}/16 placed \u2014 edge mismatches found`
+        : `${placed}/16 placed \u2014 constraint violations found`;
+      statusMsg.className = 'status-msg partial';
+    } else {
+      statusMsg.textContent = `${placed}/16 placed \u2014 looking good so far`;
+      statusMsg.className = 'status-msg';
+    }
+  }
+}
+
+// ── Drag & Drop ───────────────────────────────────────
+let dragState = null;
+
+function startDrag(pieceId, sourceZone, sourceIdx, clientX, clientY, pieceEl) {
+  clearHint();
+  sfx.pickup();
+
+  const ghost = document.createElement('div');
+  ghost.className = 'drag-ghost';
+  ghost.innerHTML = renderBlockSVG(getPiece(pieceId), 100);
+  document.body.appendChild(ghost);
+  ghost.style.left = clientX + 'px';
+  ghost.style.top = clientY + 'px';
+
+  pieceEl.classList.add('dragging');
+  dragState = { pieceId, sourceZone, sourceIdx, ghostEl: ghost, pieceEl };
+
+  document.addEventListener('pointermove', onDragMove);
+  document.addEventListener('pointerup', onDragEnd);
+}
+
+function onDragMove(e) {
+  if (!dragState) return;
+  dragState.ghostEl.style.left = e.clientX + 'px';
+  dragState.ghostEl.style.top = e.clientY + 'px';
+  document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+  const target = getCellUnderPoint(e.clientX, e.clientY);
+  if (target) target.el.classList.add('drag-over');
+}
+
+function onDragEnd(e) {
+  if (!dragState) return;
+  document.removeEventListener('pointermove', onDragMove);
+  document.removeEventListener('pointerup', onDragEnd);
+  document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+
+  const target = getCellUnderPoint(e.clientX, e.clientY);
+  let didPlace = false;
+
+  if (target) {
+    // Remove from source
+    if (dragState.sourceZone === 'board') board[dragState.sourceIdx] = null;
+    else tray[dragState.sourceIdx] = null;
+
+    // Swap if occupied
+    const existingId = target.zone === 'board' ? board[target.idx] : tray[target.idx];
+    if (existingId !== null) {
+      if (dragState.sourceZone === 'board') board[dragState.sourceIdx] = existingId;
+      else tray[dragState.sourceIdx] = existingId;
+    }
+
+    // Place in target
+    if (target.zone === 'board') board[target.idx] = dragState.pieceId;
+    else tray[target.idx] = dragState.pieceId;
+    didPlace = true;
+  }
+
+  dragState.ghostEl.remove();
+  dragState = null;
+  render();
+
+  if (didPlace) {
+    const errors = getEdgeErrors();
+    if (errors.size > 0) sfx.error();
+    else sfx.drop();
+  }
+}
+
+function getCellUnderPoint(x, y) {
+  const els = document.elementsFromPoint(x, y);
+  for (const el of els) {
+    if (el.classList.contains('board-cell') || el.classList.contains('tray-cell'))
+      return { el, zone: el.dataset.zone, idx: parseInt(el.dataset.idx) };
+  }
+  return null;
+}
+
+// ── Attach piece listeners ────────────────────────────
+function attachPieceListeners() {
+  document.querySelectorAll('.piece').forEach(pieceEl => {
+    const pieceId = parseInt(pieceEl.dataset.pieceId);
+
+    pieceEl.querySelectorAll('.rotate-btn').forEach(btn => {
+      btn.addEventListener('pointerdown', e => {
+        e.stopPropagation();
+        e.preventDefault();
+        clearHint();
+        const dir = parseInt(btn.dataset.dir);
+        rotateBlock(getPiece(pieceId), dir);
+        sfx.rotate();
+        render();
+      });
+    });
+
+    pieceEl.addEventListener('pointerdown', e => {
+      if (e.target.closest('.rotate-btn')) return;
+      e.preventDefault();
+      const cell = pieceEl.closest('.board-cell, .tray-cell');
+      if (!cell) return;
+      startDrag(pieceId, cell.dataset.zone, parseInt(cell.dataset.idx), e.clientX, e.clientY, pieceEl);
+    });
+  });
+}
+
+// ── Hint System (backtracking solver) ─────────────────
+function clearHint() {
+  hintState = null;
+}
+
+function findHint() {
+  // Find first empty board cell (row-major)
+  // For each empty cell, try every tray piece at every rotation
+  // Use backtracking solver to verify a full solution exists from this choice
+
+  const trayPieceIds = tray.filter(id => id !== null);
+  if (trayPieceIds.length === 0) return null;
+
+  // Find first empty cell
+  let targetIdx = -1;
+  for (let i = 0; i < 16; i++) {
+    if (board[i] === null) { targetIdx = i; break; }
+  }
+  if (targetIdx === -1) return null;
+
+  const r = Math.floor(targetIdx / 4);
+  const c = targetIdx % 4;
+
+  // Get neighbor constraints
+  const leftId = c > 0 ? board[targetIdx - 1] : null;
+  const topId  = r > 0 ? board[targetIdx - 4] : null;
+  const leftP  = leftId !== null ? getPiece(leftId) : null;
+  const topP   = topId  !== null ? getPiece(topId)  : null;
+
+  // Try each tray piece at each rotation
+  for (const pid of trayPieceIds) {
+    const p = getPiece(pid);
+    const origState = { top: p.top, right: p.right, bottom: p.bottom, left: p.left, rotation: p.rotation };
+
+    for (let rot = 0; rot < 4; rot++) {
+      // Check edge constraints
+      let fits = true;
+      if (leftP && leftP.right !== p.left) fits = false;
+      if (topP  && topP.bottom !== p.top)  fits = false;
+
+      // Level 2: diamond adjacency
+      if (fits && currentLevel >= 2 && p.diamond) {
+        if (leftP && leftP.diamond) fits = false;
+        if (topP  && topP.diamond)  fits = false;
+      }
+
+      if (fits) {
+        // Verify a full solution exists by trying to solve the rest
+        const canSolve = trySolveFrom(targetIdx, pid);
+        if (canSolve) {
+          // Found a valid hint - the piece is already at the right rotation
+          const trayIdx = tray.indexOf(pid);
+          return { boardIdx: targetIdx, trayIdx, pieceId: pid, rotationsNeeded: rot };
+        }
+      }
+
+      // Rotate for next attempt
+      rotateBlock(p, 1);
+    }
+
+    // Restore original state
+    p.top = origState.top; p.right = origState.right;
+    p.bottom = origState.bottom; p.left = origState.left;
+    p.rotation = origState.rotation;
+  }
+
+  return null;
+}
+
+// Lightweight forward check: after placing piece at boardIdx,
+// can remaining pieces fill the rest of the board?
+function trySolveFrom(boardIdx, placedPieceId) {
+  const p = getPiece(placedPieceId);
+
+  // Temporarily place
+  board[boardIdx] = placedPieceId;
+  const trayIdx = tray.indexOf(placedPieceId);
+  tray[trayIdx] = null;
+
+  const result = solveRemaining(boardIdx + 1);
+
+  // Undo
+  board[boardIdx] = null;
+  tray[trayIdx] = placedPieceId;
+
+  return result;
+}
+
+function solveRemaining(startIdx) {
+  // Find next empty cell
+  let idx = -1;
+  for (let i = startIdx; i < 16; i++) {
+    if (board[i] === null) { idx = i; break; }
+  }
+  if (idx === -1) {
+    // All filled, check if valid
+    return getEdgeErrors().size === 0;
+  }
+
+  const r = Math.floor(idx / 4);
+  const c = idx % 4;
+  const leftId = c > 0 ? board[idx - 1] : null;
+  const topId  = r > 0 ? board[idx - 4] : null;
+  const leftP  = leftId !== null ? getPiece(leftId) : null;
+  const topP   = topId  !== null ? getPiece(topId)  : null;
+
+  const availIds = tray.filter(id => id !== null);
+  // Deduplicate: skip identical pieces we've already tried
+  const tried = new Set();
+
+  for (const pid of availIds) {
+    const p = getPiece(pid);
+    const origState = { top: p.top, right: p.right, bottom: p.bottom, left: p.left, rotation: p.rotation };
+
+    for (let rot = 0; rot < 4; rot++) {
+      const sig = `${p.top},${p.right},${p.bottom},${p.left},${p.diamond?1:0}`;
+      if (tried.has(sig)) { rotateBlock(p, 1); continue; }
+      tried.add(sig);
+
+      let fits = true;
+      if (leftP && leftP.right !== p.left) fits = false;
+      if (topP  && topP.bottom !== p.top)  fits = false;
+      if (fits && currentLevel >= 2 && p.diamond) {
+        if (leftP && leftP.diamond) fits = false;
+        if (topP  && topP.diamond)  fits = false;
+      }
+
+      if (fits) {
+        board[idx] = pid;
+        const ti = tray.indexOf(pid);
+        tray[ti] = null;
+
+        if (solveRemaining(idx + 1)) {
+          board[idx] = null;
+          tray[ti] = pid;
+          p.top = origState.top; p.right = origState.right;
+          p.bottom = origState.bottom; p.left = origState.left;
+          p.rotation = origState.rotation;
+          return true;
+        }
+
+        board[idx] = null;
+        tray[ti] = pid;
+      }
+
+      rotateBlock(p, 1);
+    }
+
+    p.top = origState.top; p.right = origState.right;
+    p.bottom = origState.bottom; p.left = origState.left;
+    p.rotation = origState.rotation;
+  }
+
+  return false;
+}
+
+document.getElementById('btnHint').addEventListener('click', () => {
+  clearHint();
+
+  // If board has errors, clear board first
+  if (getEdgeErrors().size > 0) {
+    sfx.noHint();
+    statusMsg.textContent = 'Fix edge mismatches first, or reset';
+    statusMsg.className = 'status-msg partial';
+    return;
+  }
+
+  const hint = findHint();
+  if (hint) {
+    // Rotate the piece to the correct orientation
+    const p = getPiece(hint.pieceId);
+    for (let i = 0; i < hint.rotationsNeeded; i++) rotateBlock(p, 1);
+    hintState = hint;
+    sfx.hint();
+  } else {
+    sfx.noHint();
+    const placed = board.filter(p => p !== null).length;
+    if (placed === 16) {
+      statusMsg.textContent = 'All pieces placed!';
+    } else {
+      statusMsg.textContent = 'No valid hint from current state \u2014 try resetting';
+    }
+    statusMsg.className = 'status-msg partial';
+  }
+  render();
+});
+
+// ── Level tabs ────────────────────────────────────────
+document.querySelectorAll('.level-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.level-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentLevel = parseInt(tab.dataset.level);
+    clearHint();
+    render();
+  });
+});
+
+// ── Reset ─────────────────────────────────────────────
+document.getElementById('btnReset').addEventListener('click', () => {
+  pieces = makeBlocks();
+  board = Array.from({length: 16}, () => null);
+  tray = pieces.map(p => p.id);
+  clearHint();
+  prevWin = false;
+  sfx.drop();
+  render();
+});
+
+// ── Init ──────────────────────────────────────────────
+buildCells();
+render();
+</script>
+</body>
+</html>

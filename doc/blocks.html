@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Block Puzzle - 16 Blocks</title>
+<style>
+  body { font-family: sans-serif; background: #1a1a2e; color: #eee; margin: 2rem; }
+  h1 { text-align: center; margin-bottom: 0.2rem; }
+  .subtitle { text-align: center; color: #888; margin-bottom: 2rem; }
+  .grid { display: grid; grid-template-columns: repeat(4, 130px); gap: 18px; justify-content: center; }
+  .block-wrap { text-align: center; }
+  .block-wrap .label { font-size: 11px; color: #999; margin-top: 4px; }
+  svg { filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
+  .legend { display: flex; gap: 20px; justify-content: center; margin: 2rem 0 1rem; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+  .legend-swatch { width: 16px; height: 16px; border-radius: 3px; border: 1px solid #555; }
+</style>
+</head>
+<body>
+<h1>Block Puzzle</h1>
+<p class="subtitle">16 blocks &mdash; 7 types &times; count</p>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-swatch" style="background:#e74c3c"></div> Red (0)</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#2ecc71"></div> Green (1)</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#3498db"></div> Blue (2)</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#f1c40f"></div> Yellow (3)</div>
+  <div class="legend-item"><svg width="16" height="16"><polygon points="8,1 15,8 8,15 1,8" fill="#fff" opacity="0.7"/></svg> Diamond</div>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<script>
+const COLORS = ['#e74c3c','#2ecc71','#3498db','#f1c40f'];
+const COLOR_NAMES = ['Red','Green','Blue','Yellow'];
+
+// BlockTypes data: [count, T, R, B, L, hasDiamond]
+const TYPES = [
+  [3, 1, 3, 2, 0, 1],
+  [3, 2, 1, 3, 0, 1],
+  [1, 2, 3, 1, 0, 1],
+  [1, 3, 3, 1, 0, 1],
+  [1, 1, 3, 2, 0, 0],
+  [2, 1, 2, 3, 0, 0],
+  [5, 2, 1, 3, 0, 0]
+];
+
+// Expand types by count
+const blocks = [];
+let blockNum = 0;
+TYPES.forEach((t, typeIdx) => {
+  const [count, top, bottom, left, right, diamond] = t;
+  for (let i = 0; i < count; i++) {
+    blocks.push({ id: ++blockNum, typeIdx, top, right, bottom, left, diamond });
+  }
+});
+
+function createBlockSVG(b) {
+  const S = 120; // svg size
+  const M = 10;  // margin
+  const cx = S / 2, cy = S / 2;
+
+  // Triangle points for each edge wedge
+  const wedges = [
+    { color: COLORS[b.top],    points: `${M},${M} ${S-M},${M} ${cx},${cy}` },           // Top
+    { color: COLORS[b.right],  points: `${S-M},${M} ${S-M},${S-M} ${cx},${cy}` },       // Right
+    { color: COLORS[b.bottom], points: `${S-M},${S-M} ${M},${S-M} ${cx},${cy}` },       // Bottom
+    { color: COLORS[b.left],   points: `${M},${S-M} ${M},${M} ${cx},${cy}` },            // Left
+  ];
+
+  let svg = `<svg width="${S}" height="${S}" viewBox="0 0 ${S} ${S}">`;
+
+  // Background
+  svg += `<rect x="${M}" y="${M}" width="${S-2*M}" height="${S-2*M}" fill="#2c2c44" rx="4"/>`;
+
+  // Edge wedges
+  wedges.forEach(w => {
+    svg += `<polygon points="${w.points}" fill="${w.color}" opacity="0.85"/>`;
+  });
+
+  // Dividing lines between wedges
+  const corners = [[M,M],[S-M,M],[S-M,S-M],[M,S-M]];
+  corners.forEach(([x,y]) => {
+    svg += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#1a1a2e" stroke-width="1.5"/>`;
+  });
+
+  // Border
+  svg += `<rect x="${M}" y="${M}" width="${S-2*M}" height="${S-2*M}" fill="none" stroke="#555" stroke-width="1.5" rx="4"/>`;
+
+  // Diamond in centre
+  if (b.diamond) {
+    const ds = 14;
+    svg += `<polygon points="${cx},${cy-ds} ${cx+ds},${cy} ${cx},${cy+ds} ${cx-ds},${cy}" fill="white" opacity="0.8" stroke="#aaa" stroke-width="0.5"/>`;
+  }
+
+  // Edge labels
+  const labelStyle = 'font-size="10" fill="#fff" text-anchor="middle" font-family="sans-serif" font-weight="bold"';
+  svg += `<text x="${cx}" y="${M+14}" ${labelStyle}>${COLOR_NAMES[b.top][0]}</text>`;
+  svg += `<text x="${S-M-8}" y="${cy+4}" ${labelStyle}>${COLOR_NAMES[b.right][0]}</text>`;
+  svg += `<text x="${cx}" y="${S-M-6}" ${labelStyle}>${COLOR_NAMES[b.bottom][0]}</text>`;
+  svg += `<text x="${M+8}" y="${cy+4}" ${labelStyle}>${COLOR_NAMES[b.left][0]}</text>`;
+
+  svg += '</svg>';
+  return svg;
+}
+
+const grid = document.getElementById('grid');
+blocks.forEach(b => {
+  const div = document.createElement('div');
+  div.className = 'block-wrap';
+  div.innerHTML = createBlockSVG(b) +
+    `<div class="label">#${b.id} &mdash; Type ${b.typeIdx + 1}${b.diamond ? ' ◆' : ''}</div>`;
+  grid.appendChild(div);
+});
+</script>
+</body>
+</html>

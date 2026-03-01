@@ -21,18 +21,12 @@ public class BlockGame
 
     private void populateFromGridData()
     {
-        var data = BlockTypes.Data;
-
-        for (int i = 0; i < data.GetLength(0); i++)
+        foreach (var type in BlockTypes.Data)
         {
-            int total = data[i, 0];
-
-            blocks.Add(new Block(
-                data[i, 1],
-                data[i, 2],
-                data[i, 3],
-                data[i, 4],
-                data[i, 5] == 1));
+            for (int j = 0; j < type.Count; j++)
+            {
+                blocks.Add(new Block(type.Top, type.Right, type.Bottom, type.Left, type.HasDiamond));
+            }
         }
     }
 }
