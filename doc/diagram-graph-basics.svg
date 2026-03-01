@@ -51,8 +51,8 @@
   <line x1="472" y1="152" x2="520" y2="100" stroke="#2ecc71" stroke-width="2" marker-end="url(#arrowG)"/>
 
   <!-- Labels -->
-  <text x="460" y="72" class="sublabel">A &rarr; B</text>
-  <text x="415" y="140" class="sublabel">A &rarr; C</text>
-  <text x="505" y="140" class="sublabel">C &rarr; B</text>
+  <text x="460" y="72" class="sublabel">A &#x2192; B</text>
+  <text x="415" y="140" class="sublabel">A &#x2192; C</text>
+  <text x="505" y="140" class="sublabel">C &#x2192; B</text>
   <text x="460" y="210" class="sublabel">Edges have a direction</text>
 </svg>

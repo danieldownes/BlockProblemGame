@@ -109,7 +109,7 @@
     <text x="0" y="15" class="step">Step 3</text>
     <text x="0" y="30" class="note">Try block at [0,2]</text>
     <text x="0" y="44" class="note">Left neighbour's Right</text>
-    <text x="0" y="58" class="note">&ne; this block's Left</text>
+    <text x="0" y="58" class="note">&#x2260; this block's Left</text>
 
     <g transform="translate(0, 70)">
       <!-- Previous block (faded) -->
@@ -132,7 +132,7 @@
       <polygon points="55,50 55,0 80,25" fill="#3498db" opacity="0.85"/>
       <rect x="55" y="0" width="50" height="50" fill="none" stroke="#e74c3c" stroke-width="2" rx="3"/>
     </g>
-    <text x="55" y="140" class="fail" text-anchor="middle">Blue &ne; Blue</text>
+    <text x="55" y="140" class="fail" text-anchor="middle">Blue &#x2260; Blue</text>
     <text x="55" y="155" class="fail" text-anchor="middle">Skip!</text>
   </g>
 

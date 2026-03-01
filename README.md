@@ -1,5 +1,7 @@
 # Block Problem
 
+**[Play the Game](https://danieldownes.github.io/BlockProblemGame/doc/game.html)** | [Block Reference](https://danieldownes.github.io/BlockProblemGame/doc/blocks.html) | [Solutions](https://danieldownes.github.io/BlockProblemGame/doc/solutions.html)
+
 <img src="./doc/photo.jpg">
 
 In the mid 90s, I was gifted a wooden puzzle game that contains a grid array of 4x4 blocks. I've never since seen this puzzle game anywhere else.
@@ -122,6 +124,6 @@ No two blocks containing a diamond should touch, i.e., blocks with diamonds shou
 
 ## Play and View
 
-- [Interactive Game](./doc/game.html) — drag and drop blocks onto the board, rotate pieces, and use hints
-- [Block Reference](./doc/blocks.html) — visual reference of all 16 blocks
-- [Solutions](./doc/solutions.html) — solved grids for Level 1 and Level 2
+- [Interactive Game](https://danieldownes.github.io/BlockProblemGame/doc/game.html) — drag and drop blocks onto the board, rotate pieces, and use hints
+- [Block Reference](https://danieldownes.github.io/BlockProblemGame/doc/blocks.html) — visual reference of all 16 blocks
+- [Solutions](https://danieldownes.github.io/BlockProblemGame/doc/solutions.html) — solved grids for Level 1 and Level 2

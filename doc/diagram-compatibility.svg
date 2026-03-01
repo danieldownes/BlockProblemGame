@@ -84,7 +84,7 @@
   <line x1="390" y1="50" x2="390" y2="310" stroke="#333" stroke-width="1"/>
 
   <!-- ===== NO MATCH EXAMPLE (right) ===== -->
-  <text x="565" y="54" class="note-fail">No match: Right edge &ne; Left edge</text>
+  <text x="565" y="54" class="note-fail">No match: Right edge &#x2260; Left edge</text>
 
   <!-- Block C -->
   <g transform="translate(445, 70)">
@@ -131,7 +131,7 @@
   <text x="635" y="185" class="note">Block D</text>
 
   <!-- No match annotation -->
-  <text x="565" y="210" fill="#e74c3c" font-size="11" text-anchor="middle" font-weight="bold">C.Right (Red) &ne; D.Left (Yellow)</text>
+  <text x="565" y="210" fill="#e74c3c" font-size="11" text-anchor="middle" font-weight="bold">C.Right (Red) &#x2260; D.Left (Yellow)</text>
   <text x="565" y="226" class="note">No edge — these can never be neighbours</text>
 
   <!-- Graph representation -->
