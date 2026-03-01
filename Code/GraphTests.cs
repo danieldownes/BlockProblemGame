@@ -536,7 +536,7 @@ class SolverTests
         sb.AppendLine("</body>");
         sb.AppendLine("</html>");
 
-        string outPath = Path.GetFullPath(Path.Combine(TestContext.CurrentContext.TestDirectory, "..", "..", "..", "..", "doc", "solutions.html"));
+        string outPath = Path.GetFullPath(Path.Combine(TestContext.CurrentContext.TestDirectory, "..", "..", "..", "..", "docs", "solutions.html"));
         File.WriteAllText(outPath, sb.ToString());
         TestContext.WriteLine($"Solutions written to {outPath}");
     }

@@ -1,8 +1,8 @@
 # Block Problem
 
-**[Play the Game](https://danieldownes.github.io/BlockProblemGame/doc/game.html)** | [Block Reference](https://danieldownes.github.io/BlockProblemGame/doc/blocks.html) | [Solutions](https://danieldownes.github.io/BlockProblemGame/doc/solutions.html)
+**[Play the Game](https://danieldownes.github.io/BlockProblemGame/docs/game.html)** | [Block Reference](https://danieldownes.github.io/BlockProblemGame/docs/blocks.html) | [Solutions](https://danieldownes.github.io/BlockProblemGame/docs/solutions.html)
 
-<img src="./doc/photo.jpg">
+<img src="./docs/photo.jpg">
 
 In the mid 90s, I was gifted a wooden puzzle game that contains a grid array of 4x4 blocks. I've never since seen this puzzle game anywhere else.
 
@@ -11,11 +11,11 @@ Based on a 4x4 grid of wooden blocks, each block has a graphic on its top-side. 
 
 ## Visual Basic Implementation
 
-As per the [History.txt](./doc/History.txt) file, in 2001, I implemented the blocks including data to hold the 4 colours and set the diamond flag.
+As per the [History.txt](./docs/History.txt) file, in 2001, I implemented the blocks including data to hold the 4 colours and set the diamond flag.
 
 The UI allows the user to swap two blocks with two clicks. And also rotate a block with a right-click.
 
-<img src="./doc/vb6.png" width="40%">
+<img src="./docs/vb6.png" width="40%">
 
 The intention was to also include a brute force solving algorithm, however this was never started.
 
@@ -46,7 +46,7 @@ There are different types of graphs:
 - **Directed graph** — edges have a direction (A to B is not the same as B to A).
 - In our solver, we use **directed edges** because "Block A can sit to the LEFT of Block B" is different from "Block A can sit ABOVE Block B".
 
-<img src="./doc/diagram-graph-basics.svg" width="100%">
+<img src="./docs/diagram-graph-basics.svg" width="100%">
 
 ### The Puzzle as a Graph Problem
 
@@ -56,7 +56,7 @@ Instead, we use a **compatibility graph** to dramatically reduce the search spac
 
 Each block has four coloured edges and an optional centre diamond:
 
-<img src="./doc/diagram-block-anatomy.svg" width="100%">
+<img src="./docs/diagram-block-anatomy.svg" width="100%">
 
 ### Step 1: Build the Compatibility Graph
 
@@ -71,7 +71,7 @@ For example, if Block 3 at rotation 0 has a red right edge, and Block 7 at rotat
 
 This pre-computation is fast (comparing all 64 x 64 pairs) and creates a lookup table that the solver queries thousands of times during the search.
 
-<img src="./doc/diagram-compatibility.svg" width="100%">
+<img src="./docs/diagram-compatibility.svg" width="100%">
 
 ### Step 2: Constraint Propagation
 
@@ -85,7 +85,7 @@ The solver fills the grid left-to-right, top-to-bottom. At each position, it onl
 
 This is where the graph structure pays off. Instead of checking "does this block work here?" by comparing colours each time, we simply ask "is there an edge in the compatibility graph between what's already placed and what I'm trying to place?" — a fast set lookup.
 
-<img src="./doc/diagram-backtracking.svg" width="100%">
+<img src="./docs/diagram-backtracking.svg" width="100%">
 
 ### Step 3: Forward Checking
 
@@ -101,7 +101,7 @@ Level 2 adds the rule that no two adjacent blocks can both have diamonds. The so
 
 Since 8 of the 16 blocks have diamonds and 8 don't, and no two diamond blocks can touch, diamonds must occupy one "colour" of a checkerboard pattern (like bishops on a chess board). There are only two possible parities — diamonds on even (r+c)%2 positions or odd positions. The solver tries both, pre-filtering each position's domain to only include diamond or non-diamond blocks as appropriate. This halves the search space before backtracking even begins.
 
-<img src="./doc/diagram-checkerboard.svg" width="100%">
+<img src="./docs/diagram-checkerboard.svg" width="100%">
 
 ### Why This Isn't Brute Force
 
@@ -124,6 +124,6 @@ No two blocks containing a diamond should touch, i.e., blocks with diamonds shou
 
 ## Play and View
 
-- [Interactive Game](https://danieldownes.github.io/BlockProblemGame/doc/game.html) — drag and drop blocks onto the board, rotate pieces, and use hints
-- [Block Reference](https://danieldownes.github.io/BlockProblemGame/doc/blocks.html) — visual reference of all 16 blocks
-- [Solutions](https://danieldownes.github.io/BlockProblemGame/doc/solutions.html) — solved grids for Level 1 and Level 2
+- [Interactive Game](https://danieldownes.github.io/BlockProblemGame/docs/game.html) — drag and drop blocks onto the board, rotate pieces, and use hints
+- [Block Reference](https://danieldownes.github.io/BlockProblemGame/docs/blocks.html) — visual reference of all 16 blocks
+- [Solutions](https://danieldownes.github.io/BlockProblemGame/docs/solutions.html) — solved grids for Level 1 and Level 2
