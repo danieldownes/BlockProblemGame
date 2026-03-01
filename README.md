@@ -106,3 +106,10 @@ The player must place all the blocks so that adjacent blocks have matching edge 
 
 Level 2 challenge (Level 1 plus):
 No two blocks containing a diamond should touch, i.e., blocks with diamonds should be laid out in a checkerboard pattern with respect to blocks without diamonds.
+
+
+## Play and View
+
+- [Interactive Game](./doc/game.html) — drag and drop blocks onto the board, rotate pieces, and use hints
+- [Block Reference](./doc/blocks.html) — visual reference of all 16 blocks
+- [Solutions](./doc/solutions.html) — solved grids for Level 1 and Level 2
