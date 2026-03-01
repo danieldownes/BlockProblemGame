@@ -44,11 +44,17 @@ There are different types of graphs:
 - **Directed graph** — edges have a direction (A to B is not the same as B to A).
 - In our solver, we use **directed edges** because "Block A can sit to the LEFT of Block B" is different from "Block A can sit ABOVE Block B".
 
+<img src="./doc/diagram-graph-basics.svg" width="100%">
+
 ### The Puzzle as a Graph Problem
 
 A brute force approach would try every possible arrangement of 16 blocks in 16 positions, each at 4 rotations. That's potentially 16! x 4^16 combinations — an astronomically large number (around 85 trillion billion).
 
 Instead, we use a **compatibility graph** to dramatically reduce the search space by pre-computing which blocks can actually sit next to each other.
+
+Each block has four coloured edges and an optional centre diamond:
+
+<img src="./doc/diagram-block-anatomy.svg" width="100%">
 
 ### Step 1: Build the Compatibility Graph
 
@@ -63,6 +69,8 @@ For example, if Block 3 at rotation 0 has a red right edge, and Block 7 at rotat
 
 This pre-computation is fast (comparing all 64 x 64 pairs) and creates a lookup table that the solver queries thousands of times during the search.
 
+<img src="./doc/diagram-compatibility.svg" width="100%">
+
 ### Step 2: Constraint Propagation
 
 With the compatibility graph built, we solve the puzzle using a technique called **Constraint Satisfaction with Backtracking**:
@@ -74,6 +82,8 @@ With the compatibility graph built, we solve the puzzle using a technique called
 The solver fills the grid left-to-right, top-to-bottom. At each position, it only considers placements that are compatible with the **already-placed** left and top neighbours — filtering candidates through the compatibility graph's adjacency lists.
 
 This is where the graph structure pays off. Instead of checking "does this block work here?" by comparing colours each time, we simply ask "is there an edge in the compatibility graph between what's already placed and what I'm trying to place?" — a fast set lookup.
+
+<img src="./doc/diagram-backtracking.svg" width="100%">
 
 ### Step 3: Forward Checking
 
@@ -88,6 +98,8 @@ Many of the 16 blocks are identical (same type, same colours). The solver builds
 Level 2 adds the rule that no two adjacent blocks can both have diamonds. The solver handles this with a **checkerboard parity** optimisation:
 
 Since 8 of the 16 blocks have diamonds and 8 don't, and no two diamond blocks can touch, diamonds must occupy one "colour" of a checkerboard pattern (like bishops on a chess board). There are only two possible parities — diamonds on even (r+c)%2 positions or odd positions. The solver tries both, pre-filtering each position's domain to only include diamond or non-diamond blocks as appropriate. This halves the search space before backtracking even begins.
+
+<img src="./doc/diagram-checkerboard.svg" width="100%">
 
 ### Why This Isn't Brute Force
 

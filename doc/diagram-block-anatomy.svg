@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 260" font-family="sans-serif">
+  <style>
+    text { fill: #e0e0e0; }
+    .title { font-size: 14px; font-weight: bold; fill: #ccc; }
+    .label { font-size: 13px; fill: #fff; text-anchor: middle; font-weight: bold; }
+    .callout { font-size: 11px; fill: #bbb; }
+    .callout-bold { font-size: 11px; fill: #eee; font-weight: bold; }
+  </style>
+  <rect width="520" height="260" rx="8" fill="#1a1a2e"/>
+
+  <text x="260" y="24" class="title" text-anchor="middle">Block Anatomy — Each Block Has 4 Coloured Edges</text>
+
+  <!-- Block -->
+  <g transform="translate(180, 45)">
+    <rect x="0" y="0" width="160" height="160" fill="#2c2c44" rx="6"/>
+    <!-- Top wedge - Green -->
+    <polygon points="0,0 160,0 80,80" fill="#2ecc71" opacity="0.85"/>
+    <!-- Right wedge - Red -->
+    <polygon points="160,0 160,160 80,80" fill="#e74c3c" opacity="0.85"/>
+    <!-- Bottom wedge - Yellow -->
+    <polygon points="160,160 0,160 80,80" fill="#f1c40f" opacity="0.85"/>
+    <!-- Left wedge - Blue -->
+    <polygon points="0,160 0,0 80,80" fill="#3498db" opacity="0.85"/>
+    <!-- Dividing lines -->
+    <line x1="80" y1="80" x2="0" y2="0" stroke="#1a1a2e" stroke-width="2"/>
+    <line x1="80" y1="80" x2="160" y2="0" stroke="#1a1a2e" stroke-width="2"/>
+    <line x1="80" y1="80" x2="160" y2="160" stroke="#1a1a2e" stroke-width="2"/>
+    <line x1="80" y1="80" x2="0" y2="160" stroke="#1a1a2e" stroke-width="2"/>
+    <!-- Border -->
+    <rect x="0" y="0" width="160" height="160" fill="none" stroke="#555" stroke-width="2" rx="6"/>
+    <!-- Diamond -->
+    <polygon points="80,60 100,80 80,100 60,80" fill="white" opacity="0.8" stroke="#aaa" stroke-width="0.5"/>
+    <!-- Edge labels -->
+    <text x="80" y="22" class="label">G</text>
+    <text x="147" y="85" class="label">R</text>
+    <text x="80" y="152" class="label">Y</text>
+    <text x="14" y="85" class="label">B</text>
+  </g>
+
+  <!-- Callout lines and labels -->
+  <!-- Top -->
+  <line x1="260" y1="45" x2="260" y2="32" stroke="#888" stroke-width="1" stroke-dasharray="3,2"/>
+  <text x="260" y="42" class="callout" text-anchor="middle" dy="-14">Top edge = <tspan class="callout-bold" fill="#2ecc71">Green</tspan></text>
+
+  <!-- Right -->
+  <line x1="340" y1="125" x2="395" y2="125" stroke="#888" stroke-width="1" stroke-dasharray="3,2"/>
+  <text x="400" y="120" class="callout">Right edge = <tspan class="callout-bold" fill="#e74c3c">Red</tspan></text>
+
+  <!-- Bottom -->
+  <line x1="260" y1="205" x2="260" y2="230" stroke="#888" stroke-width="1" stroke-dasharray="3,2"/>
+  <text x="260" y="245" class="callout" text-anchor="middle">Bottom edge = <tspan class="callout-bold" fill="#f1c40f">Yellow</tspan></text>
+
+  <!-- Left -->
+  <line x1="180" y1="125" x2="125" y2="125" stroke="#888" stroke-width="1" stroke-dasharray="3,2"/>
+  <text x="120" y="120" class="callout" text-anchor="end">Left edge = <tspan class="callout-bold" fill="#3498db">Blue</tspan></text>
+
+  <!-- Centre -->
+  <line x1="260" y1="115" x2="260" y2="100" stroke="#888" stroke-width="1" stroke-dasharray="3,2" opacity="0"/>
+  <text x="120" y="155" class="callout" text-anchor="end">Centre =</text>
+  <text x="120" y="170" class="callout-bold" text-anchor="end">Diamond</text>
+</svg>

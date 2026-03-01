@@ -331,8 +331,8 @@ function createPieceEl(piece) {
   if (hintState && hintState.pieceId === piece.id) el.classList.add('hint-piece');
   el.innerHTML = renderBlockSVG(piece, 100) +
     `<div class="rotate-btns">` +
-    `<div class="rotate-btn left" data-dir="-1" title="Rotate left">&#8635;</div>` +
-    `<div class="rotate-btn right" data-dir="1" title="Rotate right">&#8634;</div>` +
+    `<div class="rotate-btn left" data-dir="1" title="Rotate left">&#8635;</div>` +
+    `<div class="rotate-btn right" data-dir="-1" title="Rotate right">&#8634;</div>` +
     `</div>`;
   return el;
 }

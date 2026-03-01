@@ -1,0 +1,146 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 340" font-family="sans-serif">
+  <style>
+    text { fill: #e0e0e0; }
+    .title { font-size: 14px; font-weight: bold; fill: #ccc; }
+    .label { font-size: 11px; fill: #fff; text-anchor: middle; font-weight: bold; }
+    .note { font-size: 11px; fill: #aaa; text-anchor: middle; }
+    .note-bold { font-size: 12px; fill: #2ecc71; text-anchor: middle; font-weight: bold; }
+    .note-fail { font-size: 12px; fill: #e74c3c; text-anchor: middle; font-weight: bold; }
+  </style>
+  <rect width="750" height="340" rx="8" fill="#1a1a2e"/>
+
+  <text x="375" y="24" class="title" text-anchor="middle">Compatibility Graph — Matching Edges Create Connections</text>
+
+  <!-- ===== MATCH EXAMPLE (left) ===== -->
+  <text x="200" y="54" class="note-bold">Match: Right edge = Left edge</text>
+
+  <!-- Block A -->
+  <g transform="translate(80, 70)">
+    <rect x="0" y="0" width="100" height="100" fill="#2c2c44" rx="4"/>
+    <polygon points="0,0 100,0 50,50" fill="#2ecc71" opacity="0.85"/>
+    <polygon points="100,0 100,100 50,50" fill="#e74c3c" opacity="0.85"/>
+    <polygon points="100,100 0,100 50,50" fill="#f1c40f" opacity="0.85"/>
+    <polygon points="0,100 0,0 50,50" fill="#3498db" opacity="0.85"/>
+    <line x1="50" y1="50" x2="0" y2="0" stroke="#1a1a2e" stroke-width="1.5"/>
+    <line x1="50" y1="50" x2="100" y2="0" stroke="#1a1a2e" stroke-width="1.5"/>
+    <line x1="50" y1="50" x2="100" y2="100" stroke="#1a1a2e" stroke-width="1.5"/>
+    <line x1="50" y1="50" x2="0" y2="100" stroke="#1a1a2e" stroke-width="1.5"/>
+    <rect x="0" y="0" width="100" height="100" fill="none" stroke="#555" stroke-width="1.5" rx="4"/>
+    <text x="50" y="16" class="label">G</text>
+    <text x="90" y="54" class="label">R</text>
+    <text x="50" y="94" class="label">Y</text>
+    <text x="11" y="54" class="label">B</text>
+  </g>
+  <text x="130" y="185" class="note">Block A</text>
+
+  <!-- Arrow showing match -->
+  <defs>
+    <marker id="arrowMatch" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0,0 8,3 0,6" fill="#2ecc71"/>
+    </marker>
+    <marker id="arrowFail" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0,0 8,3 0,6" fill="#e74c3c"/>
+    </marker>
+  </defs>
+
+  <!-- Matching connection -->
+  <line x1="185" y1="120" x2="215" y2="120" stroke="#2ecc71" stroke-width="3" marker-end="url(#arrowMatch)"/>
+  <rect x="190" y="105" width="30" height="30" fill="none" stroke="#2ecc71" stroke-width="2" rx="3" stroke-dasharray="4,2"/>
+
+  <!-- Block B -->
+  <g transform="translate(220, 70)">
+    <rect x="0" y="0" width="100" height="100" fill="#2c2c44" rx="4"/>
+    <polygon points="0,0 100,0 50,50" fill="#f1c40f" opacity="0.85"/>
+    <polygon points="100,0 100,100 50,50" fill="#3498db" opacity="0.85"/>
+    <polygon points="100,100 0,100 50,50" fill="#2ecc71" opacity="0.85"/>
+    <polygon points="0,100 0,0 50,50" fill="#e74c3c" opacity="0.85"/>
+    <line x1="50" y1="50" x2="0" y2="0" stroke="#1a1a2e" stroke-width="1.5"/>
+    <line x1="50" y1="50" x2="100" y2="0" stroke="#1a1a2e" stroke-width="1.5"/>
+    <line x1="50" y1="50" x2="100" y2="100" stroke="#1a1a2e" stroke-width="1.5"/>
+    <line x1="50" y1="50" x2="0" y2="100" stroke="#1a1a2e" stroke-width="1.5"/>
+    <rect x="0" y="0" width="100" height="100" fill="none" stroke="#555" stroke-width="1.5" rx="4"/>
+    <text x="50" y="16" class="label">Y</text>
+    <text x="90" y="54" class="label">B</text>
+    <text x="50" y="94" class="label">G</text>
+    <text x="11" y="54" class="label">R</text>
+  </g>
+  <text x="270" y="185" class="note">Block B</text>
+
+  <!-- Match annotation -->
+  <text x="200" y="210" fill="#2ecc71" font-size="11" text-anchor="middle" font-weight="bold">A.Right (Red) = B.Left (Red)</text>
+  <text x="200" y="226" class="note">A horizontal edge is created</text>
+
+  <!-- Graph representation -->
+  <g transform="translate(95, 240)">
+    <circle cx="0" cy="20" r="16" fill="#2c2c44" stroke="#5dade2" stroke-width="2"/>
+    <text x="0" y="25" class="label">A</text>
+    <line x1="20" y1="20" x2="180" y2="20" stroke="#2ecc71" stroke-width="2" marker-end="url(#arrowMatch)"/>
+    <text x="100" y="14" fill="#2ecc71" font-size="10" text-anchor="middle">horizontal</text>
+    <circle cx="195" cy="20" r="16" fill="#2c2c44" stroke="#5dade2" stroke-width="2"/>
+    <text x="195" y="25" class="label">B</text>
+  </g>
+
+  <!-- Divider -->
+  <line x1="390" y1="50" x2="390" y2="310" stroke="#333" stroke-width="1"/>
+
+  <!-- ===== NO MATCH EXAMPLE (right) ===== -->
+  <text x="565" y="54" class="note-fail">No match: Right edge &ne; Left edge</text>
+
+  <!-- Block C -->
+  <g transform="translate(445, 70)">
+    <rect x="0" y="0" width="100" height="100" fill="#2c2c44" rx="4"/>
+    <polygon points="0,0 100,0 50,50" fill="#2ecc71" opacity="0.85"/>
+    <polygon points="100,0 100,100 50,50" fill="#e74c3c" opacity="0.85"/>
+    <polygon points="100,100 0,100 50,50" fill="#f1c40f" opacity="0.85"/>
+    <polygon points="0,100 0,0 50,50" fill="#3498db" opacity="0.85"/>
+    <line x1="50" y1="50" x2="0" y2="0" stroke="#1a1a2e" stroke-width="1.5"/>
+    <line x1="50" y1="50" x2="100" y2="0" stroke="#1a1a2e" stroke-width="1.5"/>
+    <line x1="50" y1="50" x2="100" y2="100" stroke="#1a1a2e" stroke-width="1.5"/>
+    <line x1="50" y1="50" x2="0" y2="100" stroke="#1a1a2e" stroke-width="1.5"/>
+    <rect x="0" y="0" width="100" height="100" fill="none" stroke="#555" stroke-width="1.5" rx="4"/>
+    <text x="50" y="16" class="label">G</text>
+    <text x="90" y="54" class="label">R</text>
+    <text x="50" y="94" class="label">Y</text>
+    <text x="11" y="54" class="label">B</text>
+  </g>
+  <text x="495" y="185" class="note">Block C</text>
+
+  <!-- X showing no match -->
+  <g transform="translate(550, 105)">
+    <line x1="0" y1="0" x2="30" y2="30" stroke="#e74c3c" stroke-width="3"/>
+    <line x1="30" y1="0" x2="0" y2="30" stroke="#e74c3c" stroke-width="3"/>
+  </g>
+
+  <!-- Block D -->
+  <g transform="translate(585, 70)">
+    <rect x="0" y="0" width="100" height="100" fill="#2c2c44" rx="4"/>
+    <polygon points="0,0 100,0 50,50" fill="#3498db" opacity="0.85"/>
+    <polygon points="100,0 100,100 50,50" fill="#2ecc71" opacity="0.85"/>
+    <polygon points="100,100 0,100 50,50" fill="#e74c3c" opacity="0.85"/>
+    <polygon points="0,100 0,0 50,50" fill="#f1c40f" opacity="0.85"/>
+    <line x1="50" y1="50" x2="0" y2="0" stroke="#1a1a2e" stroke-width="1.5"/>
+    <line x1="50" y1="50" x2="100" y2="0" stroke="#1a1a2e" stroke-width="1.5"/>
+    <line x1="50" y1="50" x2="100" y2="100" stroke="#1a1a2e" stroke-width="1.5"/>
+    <line x1="50" y1="50" x2="0" y2="100" stroke="#1a1a2e" stroke-width="1.5"/>
+    <rect x="0" y="0" width="100" height="100" fill="none" stroke="#555" stroke-width="1.5" rx="4"/>
+    <text x="50" y="16" class="label">B</text>
+    <text x="90" y="54" class="label">G</text>
+    <text x="50" y="94" class="label">R</text>
+    <text x="11" y="54" class="label">Y</text>
+  </g>
+  <text x="635" y="185" class="note">Block D</text>
+
+  <!-- No match annotation -->
+  <text x="565" y="210" fill="#e74c3c" font-size="11" text-anchor="middle" font-weight="bold">C.Right (Red) &ne; D.Left (Yellow)</text>
+  <text x="565" y="226" class="note">No edge — these can never be neighbours</text>
+
+  <!-- Graph representation -->
+  <g transform="translate(465, 240)">
+    <circle cx="0" cy="20" r="16" fill="#2c2c44" stroke="#5dade2" stroke-width="2"/>
+    <text x="0" y="25" class="label">C</text>
+    <line x1="20" y1="20" x2="180" y2="20" stroke="#e74c3c" stroke-width="1" stroke-dasharray="6,4"/>
+    <text x="100" y="14" fill="#e74c3c" font-size="10" text-anchor="middle">no edge</text>
+    <circle cx="195" cy="20" r="16" fill="#2c2c44" stroke="#5dade2" stroke-width="2"/>
+    <text x="195" y="25" class="label">D</text>
+  </g>
+</svg>

@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 220" font-family="sans-serif">
+  <style>
+    text { fill: #e0e0e0; }
+    .title { font-size: 14px; font-weight: bold; fill: #ccc; }
+    .label { font-size: 12px; fill: #fff; text-anchor: middle; }
+    .sublabel { font-size: 11px; fill: #999; text-anchor: middle; }
+  </style>
+  <rect width="620" height="220" rx="8" fill="#1a1a2e"/>
+
+  <!-- Undirected graph -->
+  <text x="150" y="24" class="title" text-anchor="middle">Undirected Graph</text>
+
+  <!-- Nodes -->
+  <circle cx="80" cy="80" r="22" fill="#2c2c44" stroke="#5dade2" stroke-width="2"/>
+  <text x="80" y="85" class="label">A</text>
+  <circle cx="220" cy="80" r="22" fill="#2c2c44" stroke="#5dade2" stroke-width="2"/>
+  <text x="220" y="85" class="label">B</text>
+  <circle cx="150" cy="170" r="22" fill="#2c2c44" stroke="#5dade2" stroke-width="2"/>
+  <text x="150" y="175" class="label">C</text>
+
+  <!-- Edges -->
+  <line x1="102" y1="80" x2="198" y2="80" stroke="#5dade2" stroke-width="2"/>
+  <line x1="90" y1="100" x2="138" y2="152" stroke="#5dade2" stroke-width="2"/>
+  <line x1="210" y1="100" x2="162" y2="152" stroke="#5dade2" stroke-width="2"/>
+
+  <!-- Labels -->
+  <text x="150" y="72" class="sublabel">edge</text>
+  <text x="105" y="140" class="sublabel">edge</text>
+  <text x="195" y="140" class="sublabel">edge</text>
+  <text x="150" y="210" class="sublabel">Edges work both ways</text>
+
+  <!-- Directed graph -->
+  <text x="460" y="24" class="title" text-anchor="middle">Directed Graph</text>
+
+  <!-- Nodes -->
+  <circle cx="390" cy="80" r="22" fill="#2c2c44" stroke="#2ecc71" stroke-width="2"/>
+  <text x="390" y="85" class="label">A</text>
+  <circle cx="530" cy="80" r="22" fill="#2c2c44" stroke="#2ecc71" stroke-width="2"/>
+  <text x="530" y="85" class="label">B</text>
+  <circle cx="460" cy="170" r="22" fill="#2c2c44" stroke="#2ecc71" stroke-width="2"/>
+  <text x="460" y="175" class="label">C</text>
+
+  <!-- Directed edges with arrows -->
+  <defs>
+    <marker id="arrowG" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0,0 8,3 0,6" fill="#2ecc71"/>
+    </marker>
+  </defs>
+  <line x1="412" y1="80" x2="505" y2="80" stroke="#2ecc71" stroke-width="2" marker-end="url(#arrowG)"/>
+  <line x1="400" y1="100" x2="447" y2="150" stroke="#2ecc71" stroke-width="2" marker-end="url(#arrowG)"/>
+  <line x1="472" y1="152" x2="520" y2="100" stroke="#2ecc71" stroke-width="2" marker-end="url(#arrowG)"/>
+
+  <!-- Labels -->
+  <text x="460" y="72" class="sublabel">A &rarr; B</text>
+  <text x="415" y="140" class="sublabel">A &rarr; C</text>
+  <text x="505" y="140" class="sublabel">C &rarr; B</text>
+  <text x="460" y="210" class="sublabel">Edges have a direction</text>
+</svg>

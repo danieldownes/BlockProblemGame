@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" font-family="sans-serif">
+  <style>
+    text { fill: #e0e0e0; }
+    .title { font-size: 14px; font-weight: bold; fill: #ccc; }
+    .label { font-size: 11px; fill: #fff; text-anchor: middle; font-weight: bold; }
+    .note { font-size: 11px; fill: #aaa; }
+    .diamond { fill: white; opacity: 0.8; stroke: #aaa; stroke-width: 0.5; }
+  </style>
+  <rect width="600" height="300" rx="8" fill="#1a1a2e"/>
+
+  <text x="300" y="24" class="title" text-anchor="middle">Level 2 — Diamond Checkerboard Parity</text>
+  <text x="300" y="44" class="note" text-anchor="middle">No two adjacent blocks can both have diamonds — they must form a checkerboard</text>
+
+  <!-- Parity A -->
+  <text x="145" y="74" class="label">Parity A</text>
+
+  <g transform="translate(65, 85)">
+    <!-- Row 0 -->
+    <rect x="0" y="0" width="40" height="40" fill="#1a3a2a" rx="3" stroke="#2ecc71" stroke-width="1.5"/>
+    <polygon points="20,10 30,20 20,30 10,20" class="diamond"/>
+    <rect x="42" y="0" width="40" height="40" fill="#16162a" rx="3" stroke="#2a2a44" stroke-width="1.5"/>
+    <rect x="84" y="0" width="40" height="40" fill="#1a3a2a" rx="3" stroke="#2ecc71" stroke-width="1.5"/>
+    <polygon points="104,10 114,20 104,30 94,20" class="diamond"/>
+    <rect x="126" y="0" width="40" height="40" fill="#16162a" rx="3" stroke="#2a2a44" stroke-width="1.5"/>
+
+    <!-- Row 1 -->
+    <rect x="0" y="42" width="40" height="40" fill="#16162a" rx="3" stroke="#2a2a44" stroke-width="1.5"/>
+    <rect x="42" y="42" width="40" height="40" fill="#1a3a2a" rx="3" stroke="#2ecc71" stroke-width="1.5"/>
+    <polygon points="62,52 72,62 62,72 52,62" class="diamond"/>
+    <rect x="84" y="42" width="40" height="40" fill="#16162a" rx="3" stroke="#2a2a44" stroke-width="1.5"/>
+    <rect x="126" y="42" width="40" height="40" fill="#1a3a2a" rx="3" stroke="#2ecc71" stroke-width="1.5"/>
+    <polygon points="146,52 156,62 146,72 136,62" class="diamond"/>
+
+    <!-- Row 2 -->
+    <rect x="0" y="84" width="40" height="40" fill="#1a3a2a" rx="3" stroke="#2ecc71" stroke-width="1.5"/>
+    <polygon points="20,94 30,104 20,114 10,104" class="diamond"/>
+    <rect x="42" y="84" width="40" height="40" fill="#16162a" rx="3" stroke="#2a2a44" stroke-width="1.5"/>
+    <rect x="84" y="84" width="40" height="40" fill="#1a3a2a" rx="3" stroke="#2ecc71" stroke-width="1.5"/>
+    <polygon points="104,94 114,104 104,114 94,104" class="diamond"/>
+    <rect x="126" y="84" width="40" height="40" fill="#16162a" rx="3" stroke="#2a2a44" stroke-width="1.5"/>
+
+    <!-- Row 3 -->
+    <rect x="0" y="126" width="40" height="40" fill="#16162a" rx="3" stroke="#2a2a44" stroke-width="1.5"/>
+    <rect x="42" y="126" width="40" height="40" fill="#1a3a2a" rx="3" stroke="#2ecc71" stroke-width="1.5"/>
+    <polygon points="62,136 72,146 62,156 52,146" class="diamond"/>
+    <rect x="84" y="126" width="40" height="40" fill="#16162a" rx="3" stroke="#2a2a44" stroke-width="1.5"/>
+    <rect x="126" y="126" width="40" height="40" fill="#1a3a2a" rx="3" stroke="#2ecc71" stroke-width="1.5"/>
+    <polygon points="146,136 156,146 146,156 136,146" class="diamond"/>
+  </g>
+  <text x="145" y="270" class="note" text-anchor="middle">Diamonds on even (r+c) % 2 = 0</text>
+
+  <!-- OR -->
+  <text x="300" y="178" fill="#5dade2" font-size="16" text-anchor="middle" font-weight="bold">OR</text>
+
+  <!-- Parity B -->
+  <text x="455" y="74" class="label">Parity B</text>
+
+  <g transform="translate(375, 85)">
+    <!-- Row 0 -->
+    <rect x="0" y="0" width="40" height="40" fill="#16162a" rx="3" stroke="#2a2a44" stroke-width="1.5"/>
+    <rect x="42" y="0" width="40" height="40" fill="#1a3a2a" rx="3" stroke="#2ecc71" stroke-width="1.5"/>
+    <polygon points="62,10 72,20 62,30 52,20" class="diamond"/>
+    <rect x="84" y="0" width="40" height="40" fill="#16162a" rx="3" stroke="#2a2a44" stroke-width="1.5"/>
+    <rect x="126" y="0" width="40" height="40" fill="#1a3a2a" rx="3" stroke="#2ecc71" stroke-width="1.5"/>
+    <polygon points="146,10 156,20 146,30 136,20" class="diamond"/>
+
+    <!-- Row 1 -->
+    <rect x="0" y="42" width="40" height="40" fill="#1a3a2a" rx="3" stroke="#2ecc71" stroke-width="1.5"/>
+    <polygon points="20,52 30,62 20,72 10,62" class="diamond"/>
+    <rect x="42" y="42" width="40" height="40" fill="#16162a" rx="3" stroke="#2a2a44" stroke-width="1.5"/>
+    <rect x="84" y="42" width="40" height="40" fill="#1a3a2a" rx="3" stroke="#2ecc71" stroke-width="1.5"/>
+    <polygon points="104,52 114,62 104,72 94,62" class="diamond"/>
+    <rect x="126" y="42" width="40" height="40" fill="#16162a" rx="3" stroke="#2a2a44" stroke-width="1.5"/>
+
+    <!-- Row 2 -->
+    <rect x="0" y="84" width="40" height="40" fill="#16162a" rx="3" stroke="#2a2a44" stroke-width="1.5"/>
+    <rect x="42" y="84" width="40" height="40" fill="#1a3a2a" rx="3" stroke="#2ecc71" stroke-width="1.5"/>
+    <polygon points="62,94 72,104 62,114 52,104" class="diamond"/>
+    <rect x="84" y="84" width="40" height="40" fill="#16162a" rx="3" stroke="#2a2a44" stroke-width="1.5"/>
+    <rect x="126" y="84" width="40" height="40" fill="#1a3a2a" rx="3" stroke="#2ecc71" stroke-width="1.5"/>
+    <polygon points="146,94 156,104 146,114 136,104" class="diamond"/>
+
+    <!-- Row 3 -->
+    <rect x="0" y="126" width="40" height="40" fill="#1a3a2a" rx="3" stroke="#2ecc71" stroke-width="1.5"/>
+    <polygon points="20,136 30,146 20,156 10,146" class="diamond"/>
+    <rect x="42" y="126" width="40" height="40" fill="#16162a" rx="3" stroke="#2a2a44" stroke-width="1.5"/>
+    <rect x="84" y="126" width="40" height="40" fill="#1a3a2a" rx="3" stroke="#2ecc71" stroke-width="1.5"/>
+    <polygon points="104,136 114,146 104,156 94,146" class="diamond"/>
+    <rect x="126" y="126" width="40" height="40" fill="#16162a" rx="3" stroke="#2a2a44" stroke-width="1.5"/>
+  </g>
+  <text x="455" y="270" class="note" text-anchor="middle">Diamonds on odd (r+c) % 2 = 1</text>
+
+  <text x="300" y="293" class="note" text-anchor="middle">The solver tries both parities, pre-filtering each position's candidates to halve the search space</text>
+</svg>
