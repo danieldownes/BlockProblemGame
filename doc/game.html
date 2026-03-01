@@ -40,7 +40,10 @@ h1 { margin-bottom: 0.2rem; }
 /* Block piece wrapper */
 .piece { position: relative; cursor: grab; width: 100px; height: 100px; }
 .piece.dragging { opacity: 0.3; cursor: grabbing; }
-.piece svg { display: block; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
+.piece svg { display: block; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+  transition: transform 0.18s ease-out; }
+.piece.rotate-cw svg { transform: rotate(90deg); }
+.piece.rotate-ccw svg { transform: rotate(-90deg); }
 .piece.hint-piece svg { filter: drop-shadow(0 0 8px rgba(46,204,113,0.8)); }
 .piece.hint-piece { animation: hintPulse 0.8s ease-in-out infinite alternate; }
 
@@ -331,8 +334,8 @@ function createPieceEl(piece) {
   if (hintState && hintState.pieceId === piece.id) el.classList.add('hint-piece');
   el.innerHTML = renderBlockSVG(piece, 100) +
     `<div class="rotate-btns">` +
-    `<div class="rotate-btn left" data-dir="-1" title="Rotate left">&#8634;</div>` +
-    `<div class="rotate-btn right" data-dir="1" title="Rotate right">&#8635;</div>` +
+    `<div class="rotate-btn left" data-dir="-1" title="Rotate left">&#8635;</div>` +
+    `<div class="rotate-btn right" data-dir="1" title="Rotate right">&#8634;</div>` +
     `</div>`;
   return el;
 }
@@ -527,9 +530,15 @@ function attachPieceListeners() {
         e.preventDefault();
         clearHint();
         const dir = parseInt(btn.dataset.dir);
-        rotateBlock(getPiece(pieceId), dir);
+
+        // Animate: apply rotation class, then after transition update state
+        pieceEl.classList.add(dir === 1 ? 'rotate-cw' : 'rotate-ccw');
         sfx.rotate();
-        render();
+
+        setTimeout(() => {
+          rotateBlock(getPiece(pieceId), dir);
+          render();
+        }, 180);
       });
     });
 
